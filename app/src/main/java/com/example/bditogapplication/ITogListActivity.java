@@ -3,6 +3,7 @@ package com.example.bditogapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -32,6 +33,7 @@ public class ITogListActivity extends AppCompatActivity {// Эта активн�
                 }
 
             }
+
         });
         back.setOnClickListener((v)->  // Обработка нажатия кнопки выхода
                 finish()
@@ -44,6 +46,7 @@ public class ITogListActivity extends AppCompatActivity {// Эта активн�
         a = new SensorAdapter(
                 this, dbSensor.selectAll()
         );
+        a.notifyDataSetChanged();
         listbti.setAdapter(a);
     }
 }

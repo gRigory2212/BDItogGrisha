@@ -99,7 +99,8 @@ public class MacActivity extends AppCompatActivity {
             }
 
             manageMyConnectedSocket(mmSocket);// Запускаем новый поток для управления подключенным Socket
-        }
+
+            }
 
         // Закрывает Socket и заставляет поток завершить работу
         public void cancel() {
@@ -112,13 +113,13 @@ public class MacActivity extends AppCompatActivity {
         private ConnectThread connectThread;
         private TextView statusTextView;
 
-        private void connectToDevice(BluetoothDevice device) {
+        private void connectDevice(BluetoothDevice device) {
             connectThread = new ConnectThread(device);
             connectThread.start();
-            statusTextView.setText("Подключение..."); // обновляем надпись при начале подключения
+            statusTextView.setText("Подключенo"); // обновляем надпись при начале подключения
         }
 
-        private void disconnectFromDevice() {
+        private void disconnectDevice() {
             if (connectThread != null) {
                 connectThread.cancel();
                 connectThread = null;

@@ -76,6 +76,7 @@ public class BluetothActivity extends AppCompatActivity {// Класс Bluetooth
             @Override
             public void onClick(View v) {
                 pairedDevices.clear();
+                adapter.notifyDataSetChanged();
                 bluetoothAdapter.startDiscovery();
             }
         });
