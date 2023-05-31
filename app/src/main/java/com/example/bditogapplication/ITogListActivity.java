@@ -27,9 +27,13 @@ public class ITogListActivity extends AppCompatActivity {// Эта активн�
         listbti = findViewById(R.id.listIT); // Инициализируем кнопки и устанавливаем для них обработчики нажатий
         clear.setOnClickListener((v)->{ // Обработка нажатия кнопки удаления
             ArrayList<SensorEntity> sensors = a.getList(); // Получаем список всех сенсоров
-            for(SensorEntity s : sensors){
+            for (int i = 0; i < sensors.size(); i++) {
+                SensorEntity s = sensors.get(i);
                 if (s.isRemove()){
                       dbSensor.delete(s); // Проходимся по списку и удаляем отмеченные сенсоры из базы данных
+                    sensors.remove(s); // Удаляем сенсор из адаптера и списка
+                    a.notifyDataSetChanged(); // Обновляем список
+
                 }
 
             }

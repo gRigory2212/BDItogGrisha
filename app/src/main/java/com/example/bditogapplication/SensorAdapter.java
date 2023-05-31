@@ -24,6 +24,7 @@ public class SensorAdapter extends ArrayAdapter<SensorEntity> {// Создаем
     TextView textAddress;
     TextView textDevice;
     CheckBox choose;
+    Button connect;
     ArrayList<SensorEntity> list;
 
     public ArrayList<SensorEntity> getList() {
@@ -48,10 +49,11 @@ public class SensorAdapter extends ArrayAdapter<SensorEntity> {// Создаем
         textUnit=convertView.findViewById(R.id.textViewunittx );
         textAddress=convertView.findViewById(R.id.textViewaddresstx );
         textDevice=convertView.findViewById(R.id.textViewdevicetx );
+        connect=convertView.findViewById(R.id.buttonCon);
         choose=convertView.findViewById(R.id.checkBoxDE);
         SensorEntity item =getItem(position);
 
-        textAddress.setOnClickListener(new View.OnClickListener() {// Установка слушателя клика на адрес датчика, чтобы при клике на него открывалась соответствующая страница.
+        connect.setOnClickListener(new View.OnClickListener() {// Установка слушателя клика на адрес датчика, чтобы при клике на него открывалась соответствующая страница.
 
             @Override
             public void onClick(View v) {

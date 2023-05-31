@@ -28,12 +28,15 @@ public class MacActivity extends AppCompatActivity {
     ArrayAdapter<String> stringArrayAdapter;
     boolean started = false;
     ArrayList<String> stringAlist;
+    private TextView statusTextView;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mac);
         connect = findViewById(R.id.buttonConnect);
+        statusTextView = findViewById(R.id.textViewSTatus);
         dataMac = findViewById(R.id.listMac);
         stringAlist = new ArrayList<>();
         stringArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,stringAlist);
@@ -111,20 +114,19 @@ public class MacActivity extends AppCompatActivity {
             }
         }
         private ConnectThread connectThread;
-        private TextView statusTextView;
 
         private void connectDevice(BluetoothDevice device) {
             connectThread = new ConnectThread(device);
             connectThread.start();
-            statusTextView.setText("Подключенo"); // обновляем надпись при начале подключения
+            statusTextView.setText("Подключенo"); // обновляем надпись при начале подключении
         }
 
         private void disconnectDevice() {
             if (connectThread != null) {
                 connectThread.cancel();
                 connectThread = null;
-                statusTextView.setText("Отключено"); // обновляем надпись при отключении
             }
+            statusTextView.setText("Отключено"); // обновляем надпись при отключении
         }
 
 
@@ -133,6 +135,10 @@ public class MacActivity extends AppCompatActivity {
             byte[] bytes = new byte[1024];
 
             while (mmSocket.isConnected() && started) {
+                runOnUiThread(()->{
+                    statusTextView.setText("Подключенo"); // обновляем надпись при подключении
+                });
+
                 InputStream inputStream = null;
                 try {
                     inputStream = mmSocket.getInputStream();// Получаем InputStream для чтения данных
@@ -146,21 +152,21 @@ public class MacActivity extends AppCompatActivity {
 
                 } catch (IOException e) {
                     e.printStackTrace();
+                    started = false;
                 }
                 if (value > 0) {
                     Integer finalValue = value;
-                    runOnUiThread(new Runnable() {   //перерисовываю список в основном потоке
-                        @Override
-                        public void run() {
-                            stringAlist.add(new String(bytes, 0, finalValue));// Добавляем новые данные в ArrayList
-                            stringArrayAdapter.notifyDataSetChanged(); // Сообщаем адаптеру, что данные изменились и нужно обновить список
-
-
-                        }
+                    //перерисовываю список в основном потоке
+                    runOnUiThread(() -> {
+                        stringAlist.add(new String(bytes, 0, finalValue));// Добавляем новые данные в ArrayList
+                        stringArrayAdapter.notifyDataSetChanged(); // Сообщаем адаптеру, что данные изменились и нужно обновить список
                     });
                 }
         }
         try {
+            runOnUiThread(()->{
+                disconnectDevice();
+            });
             mmSocket.close();// Закрываем Socket
 
         } catch (IOException e) {
@@ -168,6 +174,8 @@ public class MacActivity extends AppCompatActivity {
         }
 
     }
-
+    }
+        public void setStatusTextView(TextView statusTextView) {
+            this.statusTextView = statusTextView;
     }
  }
